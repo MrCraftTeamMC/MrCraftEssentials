@@ -1,0 +1,30 @@
+{
+    "commands.dim.feedback": "你来到了 %s 维度",
+
+    "commands.esstime.day.name": "服务器世界时间更改为 白天",
+    "commands.esstime.noon.name": "服务器世界时间更改为 中午",
+    "commands.esstime.night.name": "服务器世界时间更改为  傍晚 / 晚上",
+    "commands.esstime.midnight.name": "服务器世界时间更改为 晚上 / 午夜",
+
+    "commands.gm.feedback": "你的游戏模式更改为 %s",
+
+    "commands.here.feedback": "玩家 %s 在 [x: %s, y: %s, z: %s] @ %s",
+
+    "commands.jrrp.feedback": "今日人品: %s",
+
+    "commands.kickAll.feedback": "踢出所用玩家中...",
+
+    "commands.reload.command.feedback.before": "重载命令中",
+    "commands.reload.command.feedback.after": "重载命令完成",
+
+    "commands.suicide.feedback": "你自杀了",
+
+    "commands.tips.feedback": "提示: ",
+    "commands.tips.fail": "获取提示失败",
+    "commands.tips.tip1": "测试01",
+    "commands.tips.tip2": "测试02",
+
+    "dimensions.end": "minecraft:end (末地)",
+    "dimensions.nether": "minecraft:nether (下界)",
+    "dimensions.overworld": "minecraft:overworld (主世界)"
+}

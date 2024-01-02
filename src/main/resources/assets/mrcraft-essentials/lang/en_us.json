@@ -1,0 +1,30 @@
+{
+    "commands.dim.feedback": "You have been teleport to dimension %s.",
+
+    "commands.esstime.day.name": "The server world time has been changed to Day.",
+    "commands.esstime.noon.name": "The server world time has been changed to Noon.",
+    "commands.esstime.night.name": "The server world time has been changed Night.",
+    "commands.esstime.midnight.name": "The server world time has been changed to Midnight.",
+
+    "commands.gm.feedback": "Your gamemode has been changed to %s.",
+
+    "commands.here.feedback": "Player %s is at [x: %s, y: %s, z: %s] @ %s",
+
+    "commands.jrrp.feedback": "Your lucky number today: %s",
+
+    "commands.kickAll.feedback": "Kicking Players...",
+
+    "commands.reload.command.feedback.before": "Reloading Commands",
+    "commands.reload.command.feedback.after": "Reloaded Commands",
+
+    "commands.suicide.feedback": "You suicided.",
+
+    "commands.tips.feedback": "The tip is: ",
+    "commands.tips.fail": "Fail to get Tips.",
+    "commands.tips.tip1": "Test01",
+    "commands.tips.tip2": "Test02",
+
+    "dimensions.end": "minecraft:end",
+    "dimensions.nether": "minecraft:nether",
+    "dimensions.overworld": "minecraft:overworld"
+}

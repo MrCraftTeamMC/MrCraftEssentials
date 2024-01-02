@@ -1,0 +1,219 @@
+plugins {
+	id 'java'
+	id 'signing'
+	id 'fabric-loom' version '1.4-SNAPSHOT'
+	id 'maven-publish'
+	id "com.github.johnrengelman.shadow" version "8.1.1"
+	id "de.undercouch.download" version "4.1.2"
+
+	id 'me.fallenbreath.yamlang' version '1.3.1'
+	id 'com.github.hierynomus.license' version '0.16.1'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
+
+repositories {
+	// Add repositories to retrieve artifacts from in here.
+	// You should only use this when depending on other mods because
+	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
+	// for more information about repositories.
+	maven { url "https://maven.fabricmc.net" }
+	maven { url 'https://maven.terraformersmc.com/' }
+	maven { url 'https://maven.nucleoid.xyz' }
+	maven { url 'https://maven.ladysnake.org/releases' }
+	maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+	maven { url 'https://maven.fallenbreath.me/releases' }
+	maven { url "https://api.modrinth.com/maven" }
+	maven { url 'https://modmaven.dev' }
+	maven { url 'https://cursemaven.com' }
+	maven { url 'https://jitpack.io' }
+	mavenLocal()
+	mavenCentral()
+}
+
+loom {
+	accessWidenerPath = file("src/main/resources/mrcraft-essentials.accesswidener")
+//	serverOnlyMinecraftJar()
+}
+
+fabricApi {
+	configureDataGeneration()
+}
+
+configurations {
+}
+
+dependencies {
+	// To change the versions see the gradle.properties file
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	// Fabric API. This is technically optional, but you probably want it anyway.
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	
+	// Uncomment the following line to enable the deprecated Fabric API modules. 
+	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.
+
+//	modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
+
+	// Conditional Mixin
+	include(modImplementation("me.fallenbreath:conditional-mixin:${project.conditionalmixin_version}"))
+
+	include(modImplementation("me.lucko:fabric-permissions-api:${project.permissions_api_version}"))
+	include(modImplementation("eu.pb4:placeholder-api:${project.placeholder_api_version}"))
+	include(modImplementation("org.yaml:snakeyaml:${project.yaml_version}"))				// 存储 Warp/Tpa/Back 等数据
+	include(modImplementation("com.github.KenRouKoro:ctoml4j:${project.ctoml_version}"))    // Mod 配置
+//	include(modImplementation("com.moandjiezana.toml:toml4j:${project.toml_version}"))
+	include(modImplementation("io.github.ladysnake:PlayerAbilityLib:${project.player_ability_lib_version}"))
+
+	compileOnly "com.google.code.findbugs:jsr305:${project.jsr305_version}"
+	annotationProcessor(implementation("org.projectlombok:lombok:${project.lombok_version}"))
+}
+
+test {
+
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+yamlang {
+	targetSourceSets = [sourceSets.main]
+	outputDir = "assets/mrcraft-essentials/lang"
+	inputDir = "assets/yamlangs/"
+	preserveYaml = true
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 17
+	options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+}
+
+java {
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
+//	withJavadocJar()
+
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
+
+jar {
+	from("LICENSE") {
+		rename { "${it}_${project.base.archivesName.get()}"}
+	}
+}
+
+sourcesJar {
+
+}
+
+javadoc {
+
+}
+
+shadow {
+
+}
+
+shadowJar {
+	archiveClassifier.set "shaded"
+}
+
+test {
+
+}
+
+signing {
+
+}
+
+license {
+	// use "gradle licenseFormat" to apply license headers
+	header = rootProject.file('HEADER')
+	include '**/*.java'
+	skipExistingHeaders = true
+
+	headerDefinitions {
+		// ref: https://github.com/mathieucarbou/license-maven-plugin/blob/4c42374bb737378f5022a3a36849d5e23ac326ea/license-maven-plugin/src/main/java/com/mycila/maven/plugin/license/header/HeaderType.java#L48
+		// modification: add a newline at the end
+		SLASHSTAR_STYLE_NEWLINE {
+			firstLine = "/*"
+			beforeEachLine = " * "
+			endLine = " */" + System.lineSeparator()
+			afterEachLine = ""
+			skipLinePattern = null
+			firstLineDetectionPattern = "(\\s|\\t)*/\\*.*\$"
+			lastLineDetectionPattern = ".*\\*/(\\s|\\t)*\$"
+			allowBlankLines = false
+			isMultiline = true
+			padLines = false
+		}
+	}
+	mapping {
+		java = 'SLASHSTAR_STYLE_NEWLINE'
+	}
+	ext {
+		name = "MrCraftEssentials"
+		author = 'MrCraftTeamMC'
+		year = Calendar.getInstance().get(Calendar.YEAR).toString()
+	}
+}
+classes.dependsOn licenseFormatMain
+testClasses.dependsOn licenseFormatTest
+
+// configure the maven publication
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+		}
+	}
+
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+	repositories {
+		// Add repositories to publish to here.
+		// Notice: This block does NOT have the same function as the block in the top level.
+		// The repositories here will be used for publishing your artifact, not for
+		// retrieving dependencies.
+		repositories {
+			mavenLocal()
+			maven {
+				name = "GithubRepo"
+				url = "file://${local_maven_repo}"
+			}
+			maven {
+				name = "ReposiliteLocalReleases"
+				url = "http://localhost:8080/releases/"
+				credentials {
+					username = project.local_maven_username
+					password = project.local_maven_password
+				}
+				allowInsecureProtocol = true
+			}
+			maven {
+				name = "ReposiliteLocalSnapshots"
+				url = "http://localhost:8080/snapshots/"
+				credentials {
+					username = project.local_maven_username
+					password = project.local_maven_password
+				}
+				allowInsecureProtocol = true
+			}
+		}
+	}
+}

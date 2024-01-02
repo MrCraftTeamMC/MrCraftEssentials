@@ -1,0 +1,62 @@
+{
+	"schemaVersion": 1,
+	"id": "mrcraft-essentials",
+	"version": "${version}",
+	"name": "MrCraftEssentials",
+	"description": "A Minecraft Mod aims to port the plugins' feature for Fabric.",
+	"authors": [
+		{
+			"name": "MrCraftTeamMC",
+			"contact": {
+				"homepage": "https://github.com/MrCraftTeamMC"
+			}
+		}
+	],
+	"contributors": [
+		"???"
+	],
+	"contact": {
+		"homepage": "https://github.com/MrCraftTeamMC/",
+		"sources": "https://github.com/MrCraftTeamMC/MrCraft-Essentials"
+	},
+	"license": "lgplv3-or-later",
+	"icon": "assets/mrcraft-essentials/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"xyz.mrcraftteammc.mrcraftessentials.MrCraftEssentialsMod::onInitialize"
+		],
+		"client": [
+			"xyz.mrcraftteammc.mrcraftessentials.MrCraftEssentialsModClient::onInitializeClient"
+		],
+		"server": [
+			"xyz.mrcraftteammc.mrcraftessentials.MrCraftEssentialsModServer::onInitializeServer"
+		],
+		"preLaunch": [
+			"xyz.mrcraftteammc.mrcraftessentials.util.bootstrap.MrCraftEssentialsModPreLaunch::onPreLaunch"
+		],
+		"fabric-datagen": [
+			"xyz.mrcraftteammc.mrcraftessentials.datagen.MrCraftEssentialsModDataGenerator"
+		],
+		"fabric-gametest": [
+		]
+	},
+	"mixins": [
+		"mrcraft-essentials.mixins.json"
+	],
+	"accessWidener": "mrcraft-essentials.accesswidener",
+	"depends": {
+		"fabricloader": ">=0.15",
+		"minecraft": "1.20.x",
+		"java": ">=17",
+		"fabric": "*",
+		"conditional-mixin": "*",
+		"fabric-permissions-api-v0": "*",
+		"placeholder-api": "*",
+		"playerabilitylib": "*"
+	},
+	"suggests": {
+		"carpet": "*",
+		"banner": "*"
+	}
+}

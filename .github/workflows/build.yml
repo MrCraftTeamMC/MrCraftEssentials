@@ -1,0 +1,161 @@
+# Automatically build the project and run any configured tests for every push
+# and submitted pull request. This can help catch issues that only occur on
+# certain platforms or Java versions, and provides a first line of defence
+# against bad commits.
+
+name: Build CI
+on:
+  push:
+    branches:
+      - 'stable'
+      - 'dev'
+#  release:
+#    types:
+#      - published
+  workflow_dispatch:
+#    inputs:
+#      subproject:
+#        description: leave it empty to build all
+#        type: string
+#        required: false
+#        default: ''
+  workflow_call:
+#    inputs:
+#      subproject:
+#        description: leave it empty to build all
+#        type: string
+#        required: false
+#        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build for Artifacts
+    strategy:
+      matrix:
+        # Use these Java versions
+        java: [
+          17,    # Current Java LTS & minimum supported by Minecraft
+#          21,    # Current Java LTS (Test only)
+        ]
+        # and run on Linux
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+    if: github.event_name == 'push' && !startsWith(github.event.ref, 'refs/tags/') && contains(github.event.head_commit.message, '[build skip]') == false
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+        with: 
+          fetch-depth: 0
+          submodules: true
+
+      - name: Get short commit sha
+        id: get_short_sha
+        run: |
+          short_sha=$(echo ${GITHUB_SHA} | cut -c1-7)
+          echo "short_sha=$short_sha" >> $GITHUB_OUTPUT
+
+      - name: Read Properties mod info
+        id: mod_info
+        uses: christian-draeger/read-properties@1.1.1
+        with:
+          path: gradle.properties
+          properties: "mod_name mod_version mc_version"
+
+      - name: validate gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: setup jdk ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+
+      - name: make gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: build with gradle
+        run: |
+          ./gradlew build --stacktrace --no-daemon
+#          if [ -z "${{ inputs.subproject }}" ]; then
+#              ./gradlew build --stacktrace --no-daemon
+#          else
+#              args=$(echo "${{ inputs.subproject }}" | tr ',' '\n' | sed 's/$/:build/' | paste -sd ' ')
+#              ./gradlew $args --stacktrace --no-daemon
+#          fi
+
+      - name: upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Fabricated-Essentials-Build-Artifacts
+          path: |
+            build/libs/*.jar
+#            versions/*/build/libs/*.jar
+
+      - name: publish to github release
+        if: github.event.ref == 'refs/heads/dev' && contains(github.event.head_commit.message, '[publish skip]') == false 
+        uses: softprops/action-gh-release@v1
+        with: 
+          prerelease: true
+          files: |
+            build/libs/*.jar
+            versions/*/build/libs/*.jar
+          name: "${{ steps.mod_info.outputs.mc_version }}-${{ steps.mod_info.outputs.mod_version }}-${{ steps.get_short_sha.outputs.short_sha }}"
+          tag_name: "${{ steps.mod_info.outputs.mc_version }}-${{ steps.mod_info.outputs.mod_version }}-${{ steps.get_short_sha.outputs.short_sha }}"
+          target_commitish: ${{ github.event.ref }}
+          generate_release_notes: true
+          token: ${{ secrets.RELEASE_TOKEN }}
+
+      - name: publish to curseforge and modrinth
+        if: github.event.ref == 'refs/heads/stable'
+        uses:  Kir-Antipov/mc-publish@v3.3                                   
+        with:
+          curseforge-id: 123456                                             
+          curseforge-token: "${{ secrets.CURSEFORGE_TOKEN }}"
+          
+          modrinth-id: 1q2w3e4r                                             
+          modrinth-token: "${{ secrets.MODRINTH_TOKEN }}"
+
+          files: |
+            build/libs/*.jar
+#            versions/*/build/libs/*.jar
+
+          name: "${{ steps.mod_info.outputs.mod_version }} for ${{ steps.mod_info.outputs.mc_version }}"                             
+          version: "${{ steps.mod_info.outputs.mc_version }}-${{ steps.mod_info.outputs.mod_version }}"
+          version-type: release
+          
+          changelog: |
+            **This version is automatically released by GitHub Actions**
+            
+            Recent commits:
+            ${{ github.event.commits.message }}
+
+          loaders: |
+            fabric
+            quilt
+          game-versions: |
+            >=1.20 <1.21
+          java: |
+            8
+            9
+            10
+            11
+            12
+            13
+            14
+            15
+            16
+            17
+            18
+            19
+            20
+            21
+          dependencies: |
+            fabric(required){modrinth:P7dR8mSH}{curseforge:306612}
+          
+          retry-attempts: 2
+          retry-delay: 10000
+          fail-mode: skip
