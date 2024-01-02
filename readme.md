@@ -11,16 +11,16 @@
 
 [![Java Version](https://img.shields.io/badge/jdk-17.0.9+-brighgreen.svg?colorB=469C00&logo=java)](https://adoptium.net/temurin/releases/?version=17)
 [![Gradle Version](https://img.shields.io/badge/Gradle-8.3-brightgreen.svg?colorB=469C00&logo=gradle)](https://docs.gradle.org/8.3/release-notes.html)
-[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/MrCraftTeamMC/MrCraft-Essentials/build.yml)](./.github/workflows/build.yml)
-[![GitHub release (with filter)](https://img.shields.io/github/v/release/MrCraftTeamMC/MrCraft-Essentials)](https://github.com/MrCraftTeamMC/MrCraft-Essentials/releases)
-[![GitHub all releases Downloads](https://img.shields.io/github/downloads/MrCraftTeamMC/MrCraft-Essentials/total)](https://github.com/MrCraftTeamMC/MrCraft-Essentials/releases)
+[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/MrCraftTeamMC/MrCraftEssentials/build.yml)](./.github/workflows/build.yml)
+[![GitHub release (with filter)](https://img.shields.io/github/v/release/MrCraftTeamMC/MrCraftEssentials)](https://github.com/MrCraftTeamMC/MrCraftEssentials/releases)
+[![GitHub all releases Downloads](https://img.shields.io/github/downloads/MrCraftTeamMC/MrCraftEssentials/total)](https://github.com/MrCraftTeamMC/MrCraftEssentials/releases)
 
 ## Introduce
 
 This mod is a fabric version of plugin [`EssentialsX`](https://github.com/EssentialsX/Essentials) (Probably / A Part).
 
 > [!IMPORTANT]
-> **For more details, Please see [our wiki](https://github.com/MrCraftTeamMC/MrCraft-Essentials/wiki/).**
+> **For more details, Please see [our wiki](https://github.com/MrCraftTeamMC/MrCraftEssentials/wiki/).**
 
 Please help improve our wiki too!
 
@@ -47,7 +47,7 @@ Please help improve our wiki too!
 
 ## Configuring and Rules
 
-Please see [our wiki](https://github.com/MrCraftTeamMC/MrCraft-Essentials/wiki/).
+Please see [our wiki](https://github.com/MrCraftTeamMC/MrCraftEssentials/wiki/).
 
 ## Building
 
@@ -65,7 +65,7 @@ Please see [our wiki](https://github.com/MrCraftTeamMC/MrCraft-Essentials/wiki/)
 
 ## Developing and Contributing
 
-Welcome you to Fork this project and Submit your PR. [(More information here)](https://github.com/MrCraftTeamMC/MrCraft-Essentials/wiki/)
+Welcome you to Fork this project and Submit your PR. [(More information here)](https://github.com/MrCraftTeamMC/MrCraftEssentials/wiki/)
 
 > [!TIP]
 > If you are Players, we suggest you to Find bugs and Create issues.
